@@ -1,0 +1,56 @@
+@import "../../sass/main.scss";
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  height: 100vh;
+  width: 100vw;
+
+  background: linear-gradient(
+    to right,
+    #ad5389,
+    #3c1053
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  background-repeat: no-repeat;
+}
+
+.layout {
+  &__container {
+    height: 100vh;
+    display: grid;
+
+    grid-template-columns:
+      [sidebar-start] 10rem [sidebar-end full-start] minmax(2rem, 1fr)
+      [center-start] repeat(8, [col-start] minmax(min-content, 14rem) [col-end])
+      [center-end] minmax(2rem, 1fr) [full-end];
+
+    grid-template-rows: 1fr min-content;
+    grid-row-gap: 1rem;
+  }
+
+  &__navigation {
+    padding-top: 2rem;
+    grid-column: sidebar-start / sidebar-end;
+    grid-row: 1 / -1;
+
+    background: linear-gradient(
+      to right bottom,
+      rgba($color-red-dark-1, 0.8),
+      rgba($color-red-light-1, 0.8)
+    );
+  }
+
+  &__content {
+    // background: rgb(138, 12, 12);
+    padding-top: 2rem;
+    grid-column: center-start / center-end;
+  }
+
+  &__footer {
+    background: black;
+    grid-column: full-start / full-end;
+  }
+}

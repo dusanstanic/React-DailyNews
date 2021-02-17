@@ -1,0 +1,42 @@
+@import "../../sass/main.scss";
+
+.nav {
+  display: grid;
+}
+
+.nav__items {
+  display: grid;
+  grid-row-gap: 1rem;
+}
+
+.nav__item {
+  position: relative;
+  z-index: 10;
+  color: $color-white;
+  text-align: center;
+  font-size: 1.5rem;
+
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    left: 0%;
+    transform: translateY(-50%);
+    background: $color-white;
+
+    height: 0%;
+    width: 0%;
+    transition: all 0.2s;
+  }
+
+  &:hover {
+    color: $color-grey-dark-1;
+  }
+
+  &:hover::after {
+    height: 100%;
+    width: 100%;
+    transform: translateY(-50%);
+  }
+}

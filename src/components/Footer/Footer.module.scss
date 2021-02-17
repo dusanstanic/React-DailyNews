@@ -1,0 +1,41 @@
+@import "../../sass/main.scss";
+
+.footer {
+  padding: 4rem;
+  background: black;
+}
+
+.nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  grid-gap: 2rem;
+  align-items: center;
+
+  &__item {
+  }
+
+  &__link:link,
+  &__link:visited {
+    padding: 1rem;
+    font-size: 1.5rem;
+    color: $color-white;
+    text-transform: uppercase;
+    text-align: center;
+    display: block;
+    transition: all 0.2s;
+  }
+
+  &__link:hover,
+  &__link:active {
+    background-color: rgba(#fff, 0.5);
+    transform: translateY(-3px);
+  }
+}
+
+.copyright {
+  font-size: 1.2rem;
+  color: $color-grey-light-2;
+  text-align: center;
+  width: 70%;
+  margin: auto;
+}

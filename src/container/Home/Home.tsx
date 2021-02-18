@@ -8,14 +8,12 @@ import Aux from "../../hoc/Auxiliary/Auxiliary";
 import * as newsDataActions from "../../store/actions/index";
 
 interface PropsI {
-  initNews: Function;
+  fetchByCountry: Function;
   articles: Article[];
 }
 
 class Home extends Component<PropsI, {}> {
-  componentDidUpdate() {
-    console.log(this.props);
-  }
+  componentDidUpdate() {}
 
   renderArticles = () => {
     return this.props.articles.map((article) => {
@@ -43,7 +41,24 @@ class Home extends Component<PropsI, {}> {
         <div className={classes["home"]}>
           <div className={classes["home__main"]}>
             <div className={classes["home__heading"]}>
-              <h2 className={classes["home__title"]}>Welcome to the news</h2>
+              <h2 className={classes["home__title"]}>Top News</h2>
+            </div>
+          </div>
+          <div className={classes["select"]}>
+            <div className={classes["select__title"]}>Select Country</div>
+            <div className={classes["select__options"]}>
+              <div
+                className={classes["select__option"]}
+                onClick={() => this.props.fetchByCountry("au")}
+              >
+                AU
+              </div>
+              <div
+                className={classes["select__option"]}
+                onClick={() => this.props.fetchByCountry("fr")}
+              >
+                FR
+              </div>
             </div>
           </div>
           <div className={classes["articles"]}>{this.renderArticles()}</div>
@@ -61,7 +76,8 @@ const mapStateToProp = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    initNews: () => dispatch(newsDataActions.initNews()),
+    fetchByCountry: (country: string) =>
+      dispatch(newsDataActions.fetchByCountry(country)),
   };
 };
 

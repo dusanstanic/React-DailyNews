@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect } from "react";
 import { connect } from "react-redux";
-import { Route, Switch } from "react-router";
+import { Route, RouteComponentProps, Switch, withRouter } from "react-router";
 import classes from "./app.module.scss";
 import Home from "./container/Home/Home";
 import * as newsDataActions from "./store/actions/index";
@@ -9,14 +9,15 @@ import Layout from "./hoc/Layout/Layout";
 import Article from "./shared/models/Article";
 import Category from "./container/Category/Category";
 
-interface PropsI {
+interface PropsI extends RouteComponentProps {
   initNews: Function;
   articles: Article[];
 }
 
-const App: FunctionComponent<PropsI> = ({ initNews }) => {
+const App: FunctionComponent<PropsI> = ({ initNews, history }) => {
   useEffect(() => {
     initNews();
+    history.push({ pathname: "/home" });
   }, []);
 
   return (
@@ -43,4 +44,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default connect(mapStateToProp, mapDispatchToProps)(App);
+export default connect(mapStateToProp, mapDispatchToProps)(withRouter(App));

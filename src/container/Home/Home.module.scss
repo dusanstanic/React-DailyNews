@@ -2,16 +2,74 @@
 
 .home {
   display: grid;
-  grid-template-rows: 80vh min-content;
+  grid-template-rows: 60vh min-content;
 
   &__main {
     color: $color-white;
     align-self: center;
     justify-self: center;
+    grid-column: 1 / 1;
+    grid-row: 1 / 2;
   }
 
   &__title {
     animation: moveInLeft 1s;
+  }
+}
+
+.select {
+  grid-column: 1 / 1;
+  grid-row: 1 / 2;
+  justify-self: end;
+  align-self: start;
+
+  position: relative;
+  padding: 1rem;
+  background: $color-white;
+  transition: all 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    background: $color-grey-light-2;
+  }
+
+  &:hover &__options {
+    animation: fadeIn 1s forwards;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+  }
+
+  &__options {
+    opacity: 0;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 100%;
+
+    font-size: 1.2rem;
+    background: $color-grey-light-2;
+    transition: all 0.5s;
+  }
+
+  &__option {
+    border-bottom: 1px solid $color-grey-dark-1;
+    transition: all 0.3s;
+  }
+
+  &__option:hover {
+    background: $color-grey-dark-1;
+    color: $color-white;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
 

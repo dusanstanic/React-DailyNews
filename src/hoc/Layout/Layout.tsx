@@ -6,10 +6,6 @@ import Aux from "../Auxiliary/Auxiliary";
 import Navigation from "../../components/Navigation/Navigation";
 import Footer from "../../components/Footer/Footer";
 
-interface PropsI {
-  children: any;
-}
-
 class Layout extends Component<{}, FunctionComponent> {
   render() {
     return (

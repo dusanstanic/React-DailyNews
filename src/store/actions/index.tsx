@@ -1,1 +1,1 @@
-export { initNews } from "./articleData";
+export { initNews, fetchByCountry } from "./articleData";

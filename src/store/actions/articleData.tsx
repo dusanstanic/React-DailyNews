@@ -7,7 +7,19 @@ import * as actionTypes from "./actionTypes/articleData";
 const initNews = () => {
   return async (dispatch: any) => {
     try {
-      const articles = await articleService.fetchNews();
+      const articles = await articleService.fetch();
+      dispatch(fetchSuccess(articles));
+    } catch {
+      console.log("Error");
+      dispatch(fetchFailed());
+    }
+  };
+};
+
+const fetchByCountry = (country: string) => {
+  return async (dispatch: any) => {
+    try {
+      const articles = await articleService.fetchByCountry(country);
       dispatch(fetchSuccess(articles));
     } catch {
       console.log("Error");
@@ -29,7 +41,7 @@ const fetchFailed = () => {
   };
 };
 
-export { initNews };
+export { initNews, fetchByCountry };
 
 interface FetchSuccessAction {
   type: typeof actionTypes.FETCH_SUCCESS;

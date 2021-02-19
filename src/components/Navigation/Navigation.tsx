@@ -14,13 +14,13 @@ const Header = (props: any) => {
             Home
           </NavLink>
           <NavLink to={"/category"} className={classes["nav__item"]}>
-            Page1
-          </NavLink>
-          <NavLink to={"/home"} className={classes["nav__item"]}>
-            Page2
+            Category
           </NavLink>
           <NavLink to={"/home"} className={classes["nav__item"]}>
             Page3
+          </NavLink>
+          <NavLink to={"/home"} className={classes["nav__item"]}>
+            Page4
           </NavLink>
         </ul>
       </nav>

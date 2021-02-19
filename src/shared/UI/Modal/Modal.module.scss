@@ -1,0 +1,41 @@
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+
+  z-index: 9000;
+  width: 80%;
+
+  max-width: 80rem;
+}
+
+.showModal {
+  animation: openModal 1s ease-out;
+}
+
+.hideModal {
+  animation: closeModal 1s ease-out forwards;
+}
+
+@keyframes openModal {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-100vh);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-50%);
+  }
+}
+
+@keyframes closeModal {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-50%);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-100vh);
+  }
+}

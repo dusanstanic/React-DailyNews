@@ -1,36 +1,45 @@
 import classes from "./Home.module.scss";
 import { Component } from "react";
 import { connect } from "react-redux";
-import Article from "../../shared/models/Article";
+import ArticleM from "../../shared/models/Article";
 
 import Aux from "../../hoc/Auxiliary/Auxiliary";
 
 import * as newsDataActions from "../../store/actions/index";
+import Modal from "../../shared/UI/Modal/Modal";
+import Article from "../../components/Article/Article";
+import SearchParams from "../../shared/models/SearchParams";
 
 interface PropsI {
-  fetchByCountry: Function;
-  articles: Article[];
+  fetchArticles: (searchParams: SearchParams) => void;
+  articles: ArticleM[];
 }
 
-class Home extends Component<PropsI, {}> {
+interface StateI {
+  showModal: boolean;
+  article?: ArticleM;
+}
+
+class Home extends Component<PropsI, StateI> {
+  state = { showModal: false, article: undefined };
+
   componentDidUpdate() {}
 
+  handleModal = (article: ArticleM) => {
+    this.setState({
+      article: article,
+      showModal: true,
+    });
+  };
+
+  closeModal = () => {
+    this.setState({ showModal: false });
+  };
+
   renderArticles = () => {
-    return this.props.articles.map((article) => {
+    return this.props.articles.map((article, index) => {
       return (
-        <Aux key={article.title}>
-          <div className={classes["article"]}>
-            <div className={classes["article__image-wrapper"]}>
-              <img
-                src={article.urlToImage}
-                className={classes["article__image"]}
-              />
-            </div>
-            <div className={classes["article__title"]}>
-              <h3>{article.title}</h3>
-            </div>
-          </div>
-        </Aux>
+        <Article key={index} article={article} handleModal={this.handleModal} />
       );
     });
   };
@@ -38,6 +47,12 @@ class Home extends Component<PropsI, {}> {
   render() {
     return (
       <Aux>
+        <Modal show={this.state.showModal} close={this.closeModal}>
+          <Article
+            article={this.state.article}
+            handleModal={this.handleModal}
+          />
+        </Modal>
         <div className={classes["home"]}>
           <div className={classes["home__main"]}>
             <div className={classes["home__heading"]}>
@@ -49,13 +64,13 @@ class Home extends Component<PropsI, {}> {
             <div className={classes["select__options"]}>
               <div
                 className={classes["select__option"]}
-                onClick={() => this.props.fetchByCountry("au")}
+                onClick={() => this.props.fetchArticles({ country: "au" })}
               >
                 AU
               </div>
               <div
                 className={classes["select__option"]}
-                onClick={() => this.props.fetchByCountry("fr")}
+                onClick={() => this.props.fetchArticles({ country: "fr" })}
               >
                 FR
               </div>
@@ -76,8 +91,14 @@ const mapStateToProp = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    fetchByCountry: (country: string) =>
-      dispatch(newsDataActions.fetchByCountry(country)),
+    fetchArticles: (searchParams: SearchParams) => {
+      dispatch(
+        newsDataActions.fetchArticles({
+          country: searchParams.country,
+          category: searchParams.category,
+        })
+      );
+    },
   };
 };
 

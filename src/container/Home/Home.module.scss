@@ -55,6 +55,7 @@
 
   &__option {
     border-bottom: 1px solid $color-grey-dark-1;
+    padding: 0.5rem;
     transition: all 0.3s;
   }
 
@@ -99,6 +100,25 @@
 
   &__title {
     padding: 0.5rem;
+  }
+
+  &__more {
+    text-align: right;
+    padding: 1rem;
+    font-size: 1.3rem;
+  }
+
+  &__more-info {
+    display: inline-block;
+    padding: 0.5rem;
+    border-bottom: 1px solid $color-purple-dark-1;
+    transition: all 0.3s;
+
+    &:hover {
+      background-color: $color-purple-dark-1;
+      color: $color-white;
+      border-bottom: 1px solid transparent;
+    }
   }
 
   &:hover &__image-wrapper {

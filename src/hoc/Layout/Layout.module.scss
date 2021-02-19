@@ -47,6 +47,8 @@
     // background: rgb(138, 12, 12);
     padding-top: 2rem;
     grid-column: center-start / center-end;
+
+    display: grid;
   }
 
   &__footer {

@@ -1,1 +1,1 @@
-export { initNews, fetchByCountry } from "./articleData";
+export { fetchArticles, articleDataCheckState } from "./articleData";

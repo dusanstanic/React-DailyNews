@@ -8,15 +8,16 @@ import * as newsDataActions from "./store/actions/index";
 import Layout from "./hoc/Layout/Layout";
 import Article from "./shared/models/Article";
 import Category from "./container/Category/Category";
+import SearchParams from "./shared/models/SearchParams";
 
 interface PropsI extends RouteComponentProps {
-  initNews: Function;
+  articleDataCheckState: Function;
   articles: Article[];
 }
 
-const App: FunctionComponent<PropsI> = ({ initNews, history }) => {
+const App: FunctionComponent<PropsI> = ({ history, articleDataCheckState }) => {
   useEffect(() => {
-    initNews();
+    articleDataCheckState();
     history.push({ pathname: "/home" });
   }, []);
 
@@ -40,7 +41,8 @@ const mapStateToProp = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    initNews: () => dispatch(newsDataActions.initNews()),
+    articleDataCheckState: () =>
+      dispatch(newsDataActions.articleDataCheckState()),
   };
 };
 

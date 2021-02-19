@@ -1,14 +1,37 @@
 import { connect } from "react-redux";
 import Article from "../../shared/models/Article";
+import SearchParams from "../../shared/models/SearchParams";
 import * as articleService from "../../shared/services/article";
 
 import * as actionTypes from "./actionTypes/articleData";
 
-const initNews = () => {
-  return async (dispatch: any) => {
+const articleDataCheckState = () => {
+  return (dispatch: any) => {
+    const country = localStorage.getItem("country");
+    const category = localStorage.getItem("category");
+
+    dispatch(fetchArticles({ country: country, category: category }));
+  };
+};
+
+const fetchArticles = (searchParams: SearchParams) => {
+  return async (dispatch: any, getState: Function) => {
+    let country = getState().newsData.country;
+    let category = getState().newsData.category;
+
+    if (searchParams.country) {
+      country = searchParams.country;
+      localStorage.setItem("country", country);
+    }
+
+    if (searchParams.category) {
+      category = searchParams.category;
+      localStorage.setItem("category", category);
+    }
+
     try {
-      const articles = await articleService.fetch();
-      dispatch(fetchSuccess(articles));
+      const articles = await articleService.fetch({ country, category });
+      dispatch(fetchSuccess(articles, { country, category }));
     } catch {
       console.log("Error");
       dispatch(fetchFailed());
@@ -16,22 +39,14 @@ const initNews = () => {
   };
 };
 
-const fetchByCountry = (country: string) => {
-  return async (dispatch: any) => {
-    try {
-      const articles = await articleService.fetchByCountry(country);
-      dispatch(fetchSuccess(articles));
-    } catch {
-      console.log("Error");
-      dispatch(fetchFailed());
-    }
-  };
-};
-
-const fetchSuccess = (articles: any[]) => {
+const fetchSuccess = (articles: any[], searchParams: SearchParams) => {
   return {
     type: actionTypes.FETCH_SUCCESS,
-    payload: articles,
+    payload: {
+      articles,
+      country: searchParams.country,
+      category: searchParams.category,
+    },
   };
 };
 
@@ -41,11 +56,11 @@ const fetchFailed = () => {
   };
 };
 
-export { initNews, fetchByCountry };
+export { fetchArticles, articleDataCheckState };
 
 interface FetchSuccessAction {
   type: typeof actionTypes.FETCH_SUCCESS;
-  payload: Article[];
+  payload: { articles: Article[]; country: string; category: string };
 }
 
 interface FetchFailedAction {

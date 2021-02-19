@@ -4,9 +4,74 @@
   display: grid;
 }
 
+.select {
+  grid-row: 1 / -1;
+  grid-column: 1 / -1;
+  justify-self: end;
+  align-self: start;
+
+  position: relative;
+  padding: 1rem;
+  background: $color-white;
+  cursor: pointer;
+
+  &:hover &__options {
+    display: block;
+    animation: fadeIn 1s forwards;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+  }
+
+  &__options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+
+    width: 100%;
+    background: $color-grey-light-2;
+    font-size: 1.2rem;
+  }
+
+  &__option {
+    padding: 0.5rem;
+    border-bottom: 1px solid $color-grey-dark-1;
+    transition: all 0.3s;
+
+    &:hover {
+      background: $color-grey-dark-1;
+      color: $color-white;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .slider {
+  grid-row: 1 / -1;
+  grid-column: 1 / -1;
+
   overflow: hidden;
   position: relative;
+  align-self: end;
 
   &__main {
     display: flex;
@@ -38,13 +103,12 @@
 .article {
   background: $color-white;
   cursor: pointer;
-  transition: all 0.3s;
 
   display: grid;
   grid-row-gap: 1rem;
 
   &__image-wrapper {
-    transition: all 0.5s;
+    // transition: all 0.5s;
   }
 
   &__image {
@@ -61,7 +125,7 @@
   }
 
   &:hover {
-    transform: scale(1.1);
+    // transform: scale(1.1);
   }
 }
 

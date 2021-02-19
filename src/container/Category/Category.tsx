@@ -1,14 +1,16 @@
-import { env } from "process";
 import React, { Component, RefObject } from "react";
 import { connect } from "react-redux";
 import Aux from "../../hoc/Auxiliary/Auxiliary";
 import Article from "../../shared/models/Article";
+import SearchParams from "../../shared/models/SearchParams";
+import * as articleDataActions from "../../store/actions/index";
 
 import classes from "./Category.module.scss";
 
 interface PropsI {
-  initNews: Function;
+  fetchArticles: (searchParams: SearchParams) => void;
   articles: Article[];
+  category: string;
 }
 
 interface StateI {
@@ -22,24 +24,52 @@ class Category extends Component<PropsI, StateI> {
     slidesLength: 0,
   };
 
+  componentWillReceiveProps(props: PropsI) {
+    if (this.props.category !== props.category) {
+      this.removeChild();
+    }
+  }
+
   componentDidMount() {
     window.addEventListener("resize", this.handleResize);
     this.handleResize();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: PropsI) {
+    if (prevProps.category !== this.props.category) {
+      console.log("true");
+    } else {
+      console.log("false");
+    }
+
     if (this.sliderMain.current) {
       const slidderMain = this.sliderMain.current?.children;
-      console.log(this.state);
-      console.log(slidderMain.length);
-      console.log(this.index);
-      if (slidderMain.length > 0 && this.state.slidesLength === 0) {
-        console.log("YOOOOOOOOOOO");
+      // console.log(this.state);
+      // console.log(slidderMain.length);
+      // console.log(this.index);
+      if (
+        (slidderMain.length > 0 && this.state.slidesLength === 0) ||
+        prevProps.category !== this.props.category
+      ) {
+        // console.log("YOOOOOOOOOOO");
         this.handleResize();
         this.setUpSlides();
       }
     }
   }
+
+  removeChild = () => {
+    if (!this.sliderMain.current) return;
+    const sliderMain = this.sliderMain.current;
+
+    if (sliderMain.lastChild) {
+      sliderMain.removeChild(sliderMain.lastChild);
+    }
+
+    if (sliderMain.firstChild) {
+      sliderMain.removeChild(sliderMain.firstChild);
+    }
+  };
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize);
@@ -75,6 +105,7 @@ class Category extends Component<PropsI, StateI> {
 
   handleResize = () => {
     if (!this.slider.current || !this.sliderMain.current) return;
+
     this.index = 0;
     const slidder = this.slider.current;
     const slidderMain = this.sliderMain.current;
@@ -124,10 +155,8 @@ class Category extends Component<PropsI, StateI> {
 
     if (distance > 100) {
       this.shiftSlide("right", "drag");
-      this.index--;
     } else if (distance < -100) {
       this.shiftSlide("left", "drag");
-      this.index++;
     } else {
       this.sliderMain.current.style.left = this.posInitial + "px";
     }
@@ -148,7 +177,6 @@ class Category extends Component<PropsI, StateI> {
     if (dir === "right") {
       this.sliderMain.current.style.left =
         this.posInitial + this.state.slideSize + "px";
-      console.log("right");
       this.index--;
     } else if (dir === "left") {
       this.sliderMain.current.style.left =
@@ -167,6 +195,7 @@ class Category extends Component<PropsI, StateI> {
     this.sliderMain.current.classList.remove(classes["shift"]);
 
     if (this.index === -1) {
+      console.log("move left");
       this.sliderMain.current.style.left =
         -(this.state.slidesLength * this.state.slideSize) + "px";
       this.index = this.state.slidesLength - 1;
@@ -182,11 +211,7 @@ class Category extends Component<PropsI, StateI> {
     const articles = this.props.articles.map((article) => {
       return (
         <Aux key={article.title}>
-          <div
-            className={classes["article"]}
-            onMouseDown={this.dragStart}
-            onClick={this.showNews}
-          >
+          <div className={classes["article"]} onMouseDown={this.dragStart}>
             <div className={classes["article__image-wrapper"]}>
               <img
                 src={article.urlToImage}
@@ -207,6 +232,24 @@ class Category extends Component<PropsI, StateI> {
   render() {
     return (
       <div className={classes["category"]}>
+        {/* <button onClick={this.removeChild}>Remove last Child of slides</button> */}
+        <div className={classes["select"]}>
+          <div className={classes["select__title"]}>Select Category</div>
+          <div className={classes["select__options"]}>
+            <div
+              className={classes["select__option"]}
+              onClick={() => this.props.fetchArticles({ category: "sports" })}
+            >
+              Sports
+            </div>
+            <div
+              className={classes["select__option"]}
+              onClick={() => this.props.fetchArticles({ category: "science" })}
+            >
+              Science
+            </div>
+          </div>
+        </div>
         <div className={classes["slider"]} ref={this.slider}>
           <button
             className={`${classes["slider__btn"]}`}
@@ -240,12 +283,20 @@ class Category extends Component<PropsI, StateI> {
 const mapStateToProp = (state: any) => {
   return {
     articles: state.newsData.articles,
+    category: state.newsData.category,
   };
 };
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    // initNews: () => dispatch(newsDataActions.initNews()),
+    fetchArticles: (searchParams: SearchParams) => {
+      dispatch(
+        articleDataActions.fetchArticles({
+          country: searchParams.country,
+          category: searchParams.category,
+        })
+      );
+    },
   };
 };
 

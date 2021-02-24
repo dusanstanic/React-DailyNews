@@ -18,7 +18,7 @@ interface PropsI extends RouteComponentProps {
 const App: FunctionComponent<PropsI> = ({ history, articleDataCheckState }) => {
   useEffect(() => {
     articleDataCheckState();
-    history.push({ pathname: "/home" });
+    // history.push({ pathname: "/home" });
   }, []);
 
   return (

@@ -1,34 +1,34 @@
 import React, { Component, RefObject } from "react";
 import { connect } from "react-redux";
+import Article from "../../components/Article/Article";
 import Aux from "../../hoc/Auxiliary/Auxiliary";
-import Article from "../../shared/models/Article";
+import ArticleM from "../../shared/models/Article";
 import SearchParams from "../../shared/models/SearchParams";
 import * as articleDataActions from "../../store/actions/index";
+import uniqid from "uniqid";
 
 import classes from "./Category.module.scss";
 
 interface PropsI {
   fetchArticles: (searchParams: SearchParams) => void;
-  articles: Article[];
+  articles: ArticleM[];
   category: string;
 }
 
 interface StateI {
-  slideSize: number;
+  slideWidth: number;
   slidesLength: number;
+  sliderMainWidth: number;
+  articles: ArticleM[];
 }
 
 class Category extends Component<PropsI, StateI> {
-  state = {
-    slideSize: 0,
+  state: StateI = {
+    slideWidth: 0,
     slidesLength: 0,
+    sliderMainWidth: 0,
+    articles: [],
   };
-
-  componentWillReceiveProps(props: PropsI) {
-    if (this.props.category !== props.category) {
-      this.removeChild();
-    }
-  }
 
   componentDidMount() {
     window.addEventListener("resize", this.handleResize);
@@ -36,40 +36,13 @@ class Category extends Component<PropsI, StateI> {
   }
 
   componentDidUpdate(prevProps: PropsI) {
-    if (prevProps.category !== this.props.category) {
-      console.log("true");
-    } else {
-      console.log("false");
-    }
-
-    if (this.sliderMain.current) {
-      const slidderMain = this.sliderMain.current?.children;
-      // console.log(this.state);
-      // console.log(slidderMain.length);
-      // console.log(this.index);
-      if (
-        (slidderMain.length > 0 && this.state.slidesLength === 0) ||
-        prevProps.category !== this.props.category
-      ) {
-        // console.log("YOOOOOOOOOOO");
-        this.handleResize();
-        this.setUpSlides();
-      }
+    if (
+      (this.props.articles.length > 0 && this.state.slidesLength === 0) ||
+      prevProps.category !== this.props.category
+    ) {
+      this.setUpSlides();
     }
   }
-
-  removeChild = () => {
-    if (!this.sliderMain.current) return;
-    const sliderMain = this.sliderMain.current;
-
-    if (sliderMain.lastChild) {
-      sliderMain.removeChild(sliderMain.lastChild);
-    }
-
-    if (sliderMain.firstChild) {
-      sliderMain.removeChild(sliderMain.firstChild);
-    }
-  };
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize);
@@ -85,47 +58,36 @@ class Category extends Component<PropsI, StateI> {
   slidesShow = 3;
 
   setUpSlides = () => {
-    if (!this.sliderMain.current) {
-      return;
-    }
-    // console.log(this.state);
-    const slides = this.sliderMain.current.children;
-    const slidesLength = slides.length;
+    const articles = this.props.articles.slice();
+    const length = articles.length;
 
-    const firstSlide = slides[0];
-    const lastSlide = slides[slidesLength - 1];
-    const cloneFirst = firstSlide.cloneNode(true);
-    const cloneLast = lastSlide.cloneNode(true);
+    const firstSlide = articles[0];
+    const lastSlide = articles[length - 1];
 
-    this.sliderMain.current.appendChild(cloneFirst);
-    this.sliderMain.current.insertBefore(cloneLast, firstSlide);
+    articles.unshift(lastSlide);
+    articles.push(firstSlide);
 
-    this.setState({ slidesLength: slidesLength - this.slidesShow + 1 });
+    this.setState(
+      {
+        slidesLength: length - this.slidesShow + 1,
+        articles: articles,
+      },
+      () => this.handleResize()
+    );
   };
 
   handleResize = () => {
-    if (!this.slider.current || !this.sliderMain.current) return;
-
+    if (!this.slider.current) return;
     this.index = 0;
-    const slidder = this.slider.current;
-    const slidderMain = this.sliderMain.current;
-    const slideWidth = slidder.offsetWidth / this.slidesShow;
 
-    const slides = slidderMain.children;
-    const slidesArray: HTMLElement[] = Array.prototype.slice.call(slides);
+    const slideWidth = this.slider.current.offsetWidth / this.slidesShow;
+    const slidesLength = this.state.articles.length;
 
-    slidderMain.style.width = (slides.length + 2) * slideWidth + "px";
-    for (let i = 0; i < slidesArray.length; i++) {
-      slidesArray[i].style.width = slideWidth + "px";
-    }
-
-    slidderMain.style.left = `-${slideWidth}px`;
     this.setState({
-      slideSize: slideWidth,
+      slideWidth,
+      sliderMainWidth: slidesLength * slideWidth,
     });
   };
-
-  showNews = (event: any) => {};
 
   dragStart = (event: any) => {
     if (!this.sliderMain.current) return;
@@ -176,15 +138,15 @@ class Category extends Component<PropsI, StateI> {
 
     if (dir === "right") {
       this.sliderMain.current.style.left =
-        this.posInitial + this.state.slideSize + "px";
+        this.posInitial + this.state.slideWidth + "px";
       this.index--;
     } else if (dir === "left") {
       this.sliderMain.current.style.left =
-        this.posInitial - this.state.slideSize + "px";
+        this.posInitial - this.state.slideWidth + "px";
       this.index++;
     } else {
       this.sliderMain.current.style.left =
-        this.posInitial - this.state.slideSize + "px";
+        this.posInitial - this.state.slideWidth + "px";
     }
 
     this.allowShift = false;
@@ -195,12 +157,11 @@ class Category extends Component<PropsI, StateI> {
     this.sliderMain.current.classList.remove(classes["shift"]);
 
     if (this.index === -1) {
-      console.log("move left");
       this.sliderMain.current.style.left =
-        -(this.state.slidesLength * this.state.slideSize) + "px";
+        -(this.state.slidesLength * this.state.slideWidth) + "px";
       this.index = this.state.slidesLength - 1;
     } else if (this.index === this.state.slidesLength) {
-      this.sliderMain.current.style.left = -this.state.slideSize + "px";
+      this.sliderMain.current.style.left = -this.state.slideWidth + "px";
       this.index = 0;
     }
 
@@ -208,20 +169,16 @@ class Category extends Component<PropsI, StateI> {
   };
 
   renderArticles = () => {
-    const articles = this.props.articles.map((article) => {
+    if (!this.state.articles.length) return;
+
+    const articles = this.state.articles.map((article) => {
       return (
-        <Aux key={article.title}>
-          <div className={classes["article"]} onMouseDown={this.dragStart}>
-            <div className={classes["article__image-wrapper"]}>
-              <img
-                src={article.urlToImage}
-                className={classes["article__image"]}
-              />
-            </div>
-            <div className={classes["article__title"]}>
-              <h3>{article.title}</h3>
-            </div>
-          </div>
+        <Aux key={uniqid()}>
+          <Article
+            article={article}
+            styleProperties={{ width: this.state.slideWidth }}
+            dragStart={this.dragStart}
+          />
         </Aux>
       );
     });
@@ -262,6 +219,10 @@ class Category extends Component<PropsI, StateI> {
           <div
             className={classes["slider__main"]}
             ref={this.sliderMain}
+            style={{
+              left: -this.state.slideWidth,
+              width: this.state.sliderMainWidth,
+            }}
             onTransitionEnd={this.checkIndex}
           >
             {this.renderArticles()}

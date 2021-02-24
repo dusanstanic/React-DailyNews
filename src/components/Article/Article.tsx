@@ -7,27 +7,36 @@ import ArticleM from "../../shared/models/Article";
 
 interface PropsI {
   article?: ArticleM;
-  handleModal: Function;
+  handleModal?: Function;
+  dragStart?: Function;
+  styleProperties?: {};
 }
 
-const Article: FC<PropsI> = ({ article, handleModal }) => {
+const Article: FC<PropsI> = ({
+  article,
+  handleModal,
+  styleProperties,
+  dragStart,
+}) => {
   if (article) {
     return (
       <Aux>
-        <div className={classes["article"]}>
+        <div
+          className={classes["article"]}
+          style={styleProperties}
+          onMouseDown={(e) => dragStart?.(e)}
+        >
           <div className={classes["article__image-wrapper"]}>
             <img
               src={article.urlToImage}
               className={classes["article__image"]}
             />
           </div>
-          <div className={classes["article__title"]}>
-            <h3>{article.title}</h3>
-          </div>
+          <div className={classes["article__title"]}>{article.title}</div>
           <div className={classes["article__more"]}>
             <div
               className={classes["article__more-info"]}
-              onClick={() => handleModal(article)}
+              onClick={() => handleModal?.(article)}
             >
               More &rarr;
             </div>

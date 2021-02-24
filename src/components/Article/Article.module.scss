@@ -18,7 +18,16 @@
   }
 
   &__title {
+    font-size: 2rem;
+    font-weight: 700;
     padding: 0.5rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-shadow: 0.5rem 0.5rem 0.5rem rgba(rgb(179, 156, 156), 1);
+    color: transparent;
+    background: url("../../shared//images/water.jpg");
+    -webkit-background-clip: text;
   }
 
   &__more {

@@ -19,7 +19,6 @@ const initialState: NewsDataState = {
 const newsData = (state = initialState, action: ActionTypes) => {
   switch (action.type) {
     case actionTypes.FETCH_SUCCESS:
-      console.log(action.payload);
       return {
         ...state,
         articles: action.payload.articles,

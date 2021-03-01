@@ -2,14 +2,14 @@ import Article from "../../shared/models/Article";
 import * as actionTypes from "../actions/actionTypes/articleData";
 import { ActionTypes } from "../actions/articleData";
 
-interface NewsDataState {
+export interface ArticleDataState {
   articles: Article[];
   error: boolean;
   country: string;
   category: string;
 }
 
-const initialState: NewsDataState = {
+const initialState: ArticleDataState = {
   articles: [],
   error: false,
   country: "au",

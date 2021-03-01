@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import Article from "../../shared/models/Article";
 import SearchParams from "../../shared/models/SearchParams";
+import StoreI from "../../shared/models/StoreI";
 import * as articleService from "../../shared/services/article";
 
 import * as actionTypes from "./actionTypes/articleData";
@@ -15,9 +16,9 @@ const articleDataCheckState = () => {
 };
 
 const fetchArticles = (searchParams: SearchParams) => {
-  return async (dispatch: any, getState: Function) => {
-    let country = getState().newsData.country;
-    let category = getState().newsData.category;
+  return async (dispatch: any, getState: () => StoreI) => {
+    let country = getState().articleData.country;
+    let category = getState().articleData.category;
 
     if (searchParams.country) {
       country = searchParams.country;

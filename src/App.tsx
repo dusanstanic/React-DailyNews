@@ -9,6 +9,7 @@ import Layout from "./hoc/Layout/Layout";
 import Article from "./shared/models/Article";
 import Category from "./container/Category/Category";
 import SearchParams from "./shared/models/SearchParams";
+import Store from "./shared/models/StoreI";
 
 interface PropsI extends RouteComponentProps {
   articleDataCheckState: Function;
@@ -33,9 +34,9 @@ const App: FunctionComponent<PropsI> = ({ history, articleDataCheckState }) => {
   );
 };
 
-const mapStateToProp = (state: any) => {
+const mapStateToProp = (state: Store) => {
   return {
-    articles: state.newsData.articles,
+    articles: state.articleData.articles,
   };
 };
 

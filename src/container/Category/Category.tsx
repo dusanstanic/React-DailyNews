@@ -8,6 +8,7 @@ import * as articleDataActions from "../../store/actions/index";
 import uniqid from "uniqid";
 
 import classes from "./Category.module.scss";
+import Store from "../../shared/models/StoreI";
 
 interface PropsI {
   fetchArticles: (searchParams: SearchParams) => void;
@@ -23,12 +24,16 @@ interface StateI {
 }
 
 class Category extends Component<PropsI, StateI> {
-  state: StateI = {
-    slideWidth: 0,
-    slidesLength: 0,
-    sliderMainWidth: 0,
-    articles: [],
-  };
+  constructor(props: PropsI) {
+    super(props);
+
+    this.state = {
+      slideWidth: 0,
+      slidesLength: 0,
+      sliderMainWidth: 0,
+      articles: [],
+    };
+  }
 
   componentDidMount() {
     window.addEventListener("resize", this.handleResize);
@@ -58,7 +63,7 @@ class Category extends Component<PropsI, StateI> {
   slidesShow = 3;
 
   setUpSlides = () => {
-    const articles = this.props.articles.slice();
+    const articles = [...this.props.articles];
     const length = articles.length;
 
     const firstSlide = articles[0];
@@ -241,10 +246,10 @@ class Category extends Component<PropsI, StateI> {
   }
 }
 
-const mapStateToProp = (state: any) => {
+const mapStateToProp = (state: Store) => {
   return {
-    articles: state.newsData.articles,
-    category: state.newsData.category,
+    articles: state.articleData.articles,
+    category: state.articleData.category,
   };
 };
 

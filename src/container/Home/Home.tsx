@@ -9,6 +9,7 @@ import * as newsDataActions from "../../store/actions/index";
 import Modal from "../../shared/UI/Modal/Modal";
 import Article from "../../components/Article/Article";
 import SearchParams from "../../shared/models/SearchParams";
+import Store from "../../shared/models/StoreI";
 
 interface PropsI {
   fetchArticles: (searchParams: SearchParams) => void;
@@ -83,9 +84,9 @@ class Home extends Component<PropsI, StateI> {
   }
 }
 
-const mapStateToProp = (state: any) => {
+const mapStateToProp = (state: Store) => {
   return {
-    articles: state.newsData.articles,
+    articles: state.articleData.articles,
   };
 };
 

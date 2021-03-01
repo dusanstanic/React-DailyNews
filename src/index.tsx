@@ -31,7 +31,7 @@ const logger = (store: any) => {
 };
 
 const rootReducer = combineReducers({
-  newsData: newsDataReducer,
+  articleData: newsDataReducer,
 });
 
 const store = createStore(

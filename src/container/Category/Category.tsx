@@ -96,12 +96,14 @@ class Category extends Component<PropsI, StateI> {
 
   dragStart = (event: any) => {
     if (!this.sliderMain.current) return;
+    event.preventDefault();
 
     this.posInitial = this.sliderMain.current.offsetLeft;
     this.posX1 = event.clientX;
 
     document.onmousemove = this.dragAction;
     document.onmouseup = this.dragend;
+    console.log("dragStart");
   };
 
   dragAction = (event: any) => {
@@ -127,7 +129,7 @@ class Category extends Component<PropsI, StateI> {
     } else {
       this.sliderMain.current.style.left = this.posInitial + "px";
     }
-
+    console.log("dragend");
     document.onmousemove = null;
     document.onmouseup = null;
   };
